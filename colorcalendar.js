@@ -19,33 +19,25 @@ var COL_CAL_SEPARATORS = [ ":",  "-", " "];
 var CAL_RANDOM = 1.4;
 var CAL_RANDOM_2 = 5;
 
-
-// Check for Query
-if (typeof $ == undefined){
-    throw "jQuery needed";
-} else {
-    // Load WaitForTheGodDamnSP() when Page is ready
-	 _spBodyOnLoadFunctionNames.push("WaitForTheGodDamnSP");
-}
+_spBodyOnLoadFunctionNames.push("LoadColoredCalendar");
 
 // Waits for Sharepoint to load everything (1000ms)
-function WaitForTheGodDamnSP (){
+function LoadColoredCalendar (){
     LoadSodByKey("SP.UI.ApplicationPages.Calendar.js", function () {
         window.setTimeout(ColorCalendar, 1000);
     });
 }
 
 // Colores the calendar
-function ColorCalendar() {
+function ColorCalendar2() {
     // Get all calendar items
-    var $calitems = $(".ms-acal-item");
+    var calitems = document.getElementsByClassName("ms-acal-item");
 
     // check if any exists
-    if ($calitems.length > 0) {
-        $calitems.each(function (i) {
-            var $box = $(this);
-            var $text = $box.find("a");
-            var text = $text[0].innerHTML;
+    if (calitems.length > 0) {
+        for (calitem in calitems){
+            var link = calitem.getElementsByTagName("a");
+            var text = link.innerHTML;
 
             // Is calendar already colored?
             if ( text.indexOf(">") == -1){
@@ -58,13 +50,12 @@ function ColorCalendar() {
                 // calculate black or white Text
                 var fcolor = GetForegroundColor(colors);
                 // Set foreground color
-                $box.css("background-color", rgbcolors);
-                $box.find("div, a").wrapInner("<span style=\"color:"+fcolor+"\"></span>");
+                calitem.style.backgroundColor = rgbcolors;
+                text.style.color = fcolor;
+            };
+        };
 
-            }
-        });
-
-    }
+    };
     // rerun this function in 2s
     window.setTimeout(ColorCalendar, 1000);
 };
@@ -95,8 +86,6 @@ function GetName(originalText) {
 
 function GetColorCodeFromCategory(category) {
 	if (category === undefined) return [0,0,0];
-    var bgcolor = null;
-    var fgcolor = null;
 
     var hash = HashCode(category.trim());
     hash = hash * CAL_RANDOM;
