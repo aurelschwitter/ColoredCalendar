@@ -16,12 +16,14 @@
 // Separators separating Name and Text
 const COL_CAL_SEPARATORS = [":", "-", " "];
 // Random values for different colors
-const CAL_RANDOM = 99;
-const RED_MODIFIER = 0;
-const GREEN_MODIFIER = 0;
-const BLUE_MODIFIER = 0;
+let CAL_RANDOM = 99;
+let RED_MODIFIER = 0;
+let GREEN_MODIFIER = 0;
+let BLUE_MODIFIER = 0;
 
-_spBodyOnLoadFunctionNames.push("LoadColoredCalendar");
+if (typeof _spBodyOnLoadFunctionNames !== "undefined"){
+    _spBodyOnLoadFunctionNames.push("LoadColoredCalendar");
+}
 
 // Waits for Sharepoint to load everything (1000ms)
 function LoadColoredCalendar() {
@@ -108,7 +110,10 @@ function GetColorCodeFromCategory(category) {
 }
 
 function GetForegroundColor(rgb) {
-    if (rgb.length != 3) return "#000000 !important";
-    var rounded = Math.round((rgb[0] * 299 + rgb[1] * 587 + rgb[2] * 114) / 1000);
-    return rounded > 150 ? "#000000 !important" : "#ffffff !important";
+    if (rgb.length != 3) return "#000000";
+    if ((rgb[0]*0.299 + rgb[1]*0.587 + rgb[2]*0.114) > 150){
+        return "#000000";
+    } else {
+        return "#ffffff";
+    }
 }
